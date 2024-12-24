@@ -1,19 +1,21 @@
-package com.umart.backend.model;
+package com.umart.backend.model.admin;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.annotations.UuidGenerator;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "admin_actions_admins")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AdminActionsAdmin {
 
     @Id
-    @GeneratedValue
-    @UuidGenerator
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
