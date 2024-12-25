@@ -1,19 +1,25 @@
 package com.umart.backend.config;
 
+import com.umart.backend.model.admin.Admin;
 import com.umart.backend.model.admin.AdminRole;
+import com.umart.backend.repository.admin.AdminRepository;
 import com.umart.backend.repository.admin.AdminRoleRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Component
+@AllArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
     private final AdminRoleRepository adminRoleRepository;
-
-    public DataInitializer(AdminRoleRepository adminRoleRepository) {
-        this.adminRoleRepository = adminRoleRepository;
-    }
+    private final AdminRepository adminRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) {
@@ -37,6 +43,19 @@ public class DataInitializer implements CommandLineRunner {
                 }
             }
             System.out.println("Initialized default admin roles.");
+        }
+
+        if(adminRepository.count() == 0) {
+            Optional<AdminRole> roleSuperAdmin = adminRoleRepository.findByName("SUPER_ADMIN");
+
+            if(roleSuperAdmin.isPresent()) {
+                String encryptedPassword = passwordEncoder.encode("2024Dec23@umart");
+                Admin superAdmin = new Admin(null, "Umar Faruq Robbany", null, "ufarq", "umar.faruq.tif423@polban.ac.id", encryptedPassword, LocalDateTime.now(), Admin.Status.ACTIVE, roleSuperAdmin.get());
+
+                if(!adminRepository.existsByUsername(superAdmin.getUsername())) {
+                    adminRepository.save(superAdmin);
+                }
+            }
         }
     }
 
