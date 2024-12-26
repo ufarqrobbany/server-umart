@@ -54,6 +54,7 @@ public class DataInitializer implements CommandLineRunner {
 
                 if(!adminRepository.existsByUsername(superAdmin.getUsername())) {
                     adminRepository.save(superAdmin);
+                    System.out.println("Initialized default super admin.");
                 }
             }
         }
